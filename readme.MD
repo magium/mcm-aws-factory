@@ -27,15 +27,15 @@ aws/credentials/secret
 Then you need to set the settings:
 
 ```
-$ magium-configuration magium:configuration:set aws/general/region us-east-1
+$ magium-configuration set aws/general/region us-east-1
 Set aws/general/region to us-east1 (context: default)
 Don't forget to rebuild your configuration cache with magium:configuration:build
 
-$ magium-configuration magium:configuration: set aws/general/key xxxxxxxxxxxxxxxxxxx
+$ magium-configuration set aws/general/key xxxxxxxxxxxxxxxxxxx
 Set aws/general/key to xxxxxxxxxxxxxxxxxxx (context: default)
 Don't forget to rebuild your configuration cache with magium:configuration:build
 
-$ magium-configuration magium:configuration: set aws/general/secret xxxxxxxxxx
+$ magium-configuration set aws/general/secret xxxxxxxxxx
 Set aws/general/secret to xxxxxxxxxxx (context: default)
 Don't forget to rebuild your configuration cache with magium:configuration:build
 ```
