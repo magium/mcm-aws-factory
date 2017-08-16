@@ -43,7 +43,7 @@ Don't forget to rebuild your configuration cache with magium:configuration:build
 Then you need to build the configuration:
 
 ```
-$ magium-configuration magium:configuration:build
+$ magium-configuration build
 Building context: default
 Building context: production
 Building context: development
