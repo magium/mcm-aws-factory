@@ -1,0 +1,9 @@
+<magiumConfiguration xmlns="http://www.magiumlib.com/Configuration">
+    <section identifier="aws" label="Amazon Web Services">
+        <group identifier="credentials" label="Credentials">
+            <element identifier="region" label="Region" />
+            <element identifier="key" label="Key" />
+            <element identifier="secret" label="Secret" />
+        </group>
+    </section>
+</magiumConfiguration>

@@ -1,0 +1,24 @@
+{
+  "name": "magium/mcm-aws-factory",
+  "description": "A simple library for managing AWS credentials using the Magium Configuration Manager",
+  "minimum-stability": "stable",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Kevin Schroeder",
+      "email": "kschroeder@magiumlib.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Magium\\AwsFactory\\": "lib"
+    },
+    "files": [
+      "registration.php"
+    ]
+  },
+  "require": {
+    "aws/aws-sdk-php": "^3.33",
+    "magium/configuration-manager": "^1"
+  }
+}
