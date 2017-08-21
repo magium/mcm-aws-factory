@@ -16,6 +16,7 @@ use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Aws\DirectoryService\DirectoryServiceClient;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Ec2\Ec2Client;
+use Aws\Ecr\EcrClient;
 use Aws\Ecs\EcsClient;
 use Aws\Efs\EfsClient;
 use Aws\ElastiCache\ElastiCacheClient;
@@ -59,6 +60,7 @@ class AwsFactory
         DirectoryServiceClient::class => '2015-04-16',
         DynamoDbClient::class => '2012-08-10',
         EcsClient::class => '2014-11-13',
+        EcrClient::class => '2015-09-21',
         EfsClient::class => '2015-02-01',
         ElastiCacheClient::class => '2015-02-02',
         ElasticLoadBalancingClient::class => '2012-06-01',
