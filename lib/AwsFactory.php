@@ -23,6 +23,7 @@ use Aws\ElastiCache\ElastiCacheClient;
 use Aws\ElasticLoadBalancing\ElasticLoadBalancingClient;
 use Aws\ElasticLoadBalancingV2\ElasticLoadBalancingV2Client;
 use Aws\ElasticsearchService\ElasticsearchServiceClient;
+use Aws\Iam\IamClient;
 use Aws\Rds\RdsClient;
 use Aws\Route53\Route53Client;
 use Aws\S3\S3Client;
@@ -66,6 +67,7 @@ class AwsFactory
         ElasticLoadBalancingClient::class => '2012-06-01',
         ElasticLoadBalancingV2Client::class => '2015-12-01',
         ElasticsearchServiceClient::class => '2015-01-01',
+        IamClient::class => '2010-05-08',
         RdsClient::class => '2014-10-31',
         Route53Client::class => '2013-04-01',
         S3Client::class => '2006-03-01',
