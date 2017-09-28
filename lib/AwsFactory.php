@@ -31,6 +31,7 @@ use Aws\Ses\SesClient;
 use Aws\Sms\SmsClient;
 use Aws\Sns\SnsClient;
 use Aws\Sqs\SqsClient;
+use Aws\Sts\StsClient;
 use Magium\Configuration\Config\Repository\ConfigInterface;
 
 class AwsFactory
@@ -74,7 +75,8 @@ class AwsFactory
         SesClient::class => '2010-12-01',
         SmsClient::class => '2016-10-24',
         SnsClient::class => '2010-03-31',
-        SqsClient::class => '2012-11-05'
+        SqsClient::class => '2012-11-05',
+        StsClient::class => '2011-06-15'
     ];
 
     private $config;
