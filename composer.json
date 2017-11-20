@@ -20,5 +20,8 @@
   "require": {
     "aws/aws-sdk-php": "^3.33",
     "magium/configuration-manager": "^1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.4"
   }
 }

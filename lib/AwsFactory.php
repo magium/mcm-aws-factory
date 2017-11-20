@@ -2,36 +2,7 @@
 
 namespace Magium\AwsFactory;
 
-use Aws\ApiGateway\ApiGatewayClient;
-use Aws\AutoScaling\AutoScalingClient;
 use Aws\AwsClient;
-use Aws\CloudDirectory\CloudDirectoryClient;
-use Aws\CloudFormation\CloudFormationClient;
-use Aws\CloudFront\CloudFrontClient;
-use Aws\CloudSearch\CloudSearchClient;
-use Aws\CloudWatch\CloudWatchClient;
-use Aws\CodeDeploy\CodeDeployClient;
-use Aws\CognitoIdentity\CognitoIdentityClient;
-use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
-use Aws\DirectoryService\DirectoryServiceClient;
-use Aws\DynamoDb\DynamoDbClient;
-use Aws\Ec2\Ec2Client;
-use Aws\Ecr\EcrClient;
-use Aws\Ecs\EcsClient;
-use Aws\Efs\EfsClient;
-use Aws\ElastiCache\ElastiCacheClient;
-use Aws\ElasticLoadBalancing\ElasticLoadBalancingClient;
-use Aws\ElasticLoadBalancingV2\ElasticLoadBalancingV2Client;
-use Aws\ElasticsearchService\ElasticsearchServiceClient;
-use Aws\Iam\IamClient;
-use Aws\Rds\RdsClient;
-use Aws\Route53\Route53Client;
-use Aws\S3\S3Client;
-use Aws\Ses\SesClient;
-use Aws\Sms\SmsClient;
-use Aws\Sns\SnsClient;
-use Aws\Sqs\SqsClient;
-use Aws\Sts\StsClient;
 use Magium\Configuration\Config\Repository\ConfigInterface;
 
 class AwsFactory
@@ -47,37 +18,7 @@ class AwsFactory
      * @var array
      */
 
-    private static $versions = [
-        Ec2Client::class => '2016-11-15',
-        ApiGatewayClient::class => '2015-07-09',
-        AutoScalingClient::class => '2011-01-01',
-        CloudDirectoryClient::class => '2016-05-10',
-        CloudFormationClient::class => '2010-05-15',
-        CloudFrontClient::class => '2017-03-25',
-        CloudSearchClient::class => '2013-01-01',
-        CloudWatchClient::class => '2010-08-01',
-        CodeDeployClient::class => '2014-10-06',
-        CognitoIdentityClient::class => '2014-06-30',
-        CognitoIdentityProviderClient::class => '2016-04-18',
-        DirectoryServiceClient::class => '2015-04-16',
-        DynamoDbClient::class => '2012-08-10',
-        EcsClient::class => '2014-11-13',
-        EcrClient::class => '2015-09-21',
-        EfsClient::class => '2015-02-01',
-        ElastiCacheClient::class => '2015-02-02',
-        ElasticLoadBalancingClient::class => '2012-06-01',
-        ElasticLoadBalancingV2Client::class => '2015-12-01',
-        ElasticsearchServiceClient::class => '2015-01-01',
-        IamClient::class => '2010-05-08',
-        RdsClient::class => '2014-10-31',
-        Route53Client::class => '2013-04-01',
-        S3Client::class => '2006-03-01',
-        SesClient::class => '2010-12-01',
-        SmsClient::class => '2016-10-24',
-        SnsClient::class => '2010-03-31',
-        SqsClient::class => '2012-11-05',
-        StsClient::class => '2011-06-15'
-    ];
+    private static $versions = [];
 
     private $config;
     private static $self;
@@ -88,22 +29,46 @@ class AwsFactory
         self::$self = $this;
     }
 
-    public static function setVersion($class, $version)
+    private static function getDataDir($class)
     {
-        self::$versions[$class] = $version;
+        // We use the class to navigate our way to the data directory
+        $classParts = explode('\\', $class);
+        array_pop($classParts);
+        $reflection = new \ReflectionClass($class);
+        $dataDirName = dirname($reflection->getFileName());
+        $parts = explode(DIRECTORY_SEPARATOR, $dataDirName);
+        do {
+            $cwd = array_pop($parts);
+        } while (count($parts) > 0 && $cwd != 'aws-sdk-php');
+
+        return implode(DIRECTORY_SEPARATOR, $parts)
+            . DIRECTORY_SEPARATOR
+            . implode(DIRECTORY_SEPARATOR , ['aws-sdk-php', 'src', 'data']);
     }
 
     public static function getVersionFor($class)
     {
-        if (!isset(self::$versions[$class])) {
-            throw new UnknownVersionException('Could not find version for ' . $class);
+        $namespace = explode('\\', $class);
+        array_pop($namespace); // Get rid of the class name
+        $namespace = array_pop($namespace);  // Get the highest level namespace
+
+        if (!isset(self::$versions[$namespace])) {
+            $manifestFile = self::getDataDir($class) . DIRECTORY_SEPARATOR . 'manifest.json.php';
+            $manifest = include $manifestFile;
+            foreach ($manifest as $entry) {
+                self::$versions[$entry['namespace']] = $entry['versions']['latest'];
+            }
+            if (!isset(self::$versions[$namespace])) {
+                throw new UnknownVersionException('Could not find version for ' . $class);
+            }
         }
-        return self::$versions[$class];
+        return self::$versions[$namespace];
     }
 
 
     /**
-     * @param AwsClient $class
+     * @param string $class
+     * @return AwsClient
      */
 
     public function factory($class = AwsClient::class)
